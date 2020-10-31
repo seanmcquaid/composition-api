@@ -4,20 +4,33 @@
     <input v-model="name" />
     <button @click="newName = name">Press Me</button>
   </div>
-  <ul></ul>
-  {{ newName }}
+  <ul>
+    <li v-for="lib in data" :key="lib.name">{{ lib.name }}</li>
+  </ul>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { reactive, ref, toRefs, watch } from 'vue';
+import Axios from 'axios';
+
 export default {
   name: 'App',
   components: {},
   setup() {
     const name = ref(null);
     const newName = ref(null);
+    const state = reactive({ data: [] });
 
-    return { name, newName };
+    watch(() => {
+      Axios.get(`https://api.github.com/users/${newName.value}/repos`).then(
+        ({ data }) => {
+          state.data = data;
+          name.value;
+        }
+      );
+    });
+
+    return { name, newName, ...toRefs(state) };
   },
 };
 </script>
