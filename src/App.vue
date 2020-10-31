@@ -1,17 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1>Enter Github User Name</h1>
+    <input v-model="name" />
+    <button @click="newName = name">Press Me</button>
+  </div>
+  <ul></ul>
+  {{ newName }}
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { ref } from 'vue';
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  components: {},
+  setup() {
+    const name = ref(null);
+    const newName = ref(null);
+
+    return { name, newName };
+  },
+};
 </script>
 
 <style>
