@@ -10,18 +10,25 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs, watch } from 'vue';
+import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue';
 import Axios from 'axios';
 
 export default {
   name: 'App',
   components: {},
   setup() {
+    // EASY way to think of ref vs reactive - ref = primitive, reactive = object
     const name = ref(null);
     const newName = ref(null);
     const state = reactive({ data: [] });
+    const computedValue = computed(() => name.value + ' STEVE');
+
+    onMounted(() => {
+      console.log('make an api call here on load!');
+    });
 
     watch(() => {
+      // sort of like an observable, only runs this when any dependencies change
       Axios.get(`https://api.github.com/users/${newName.value}/repos`).then(
         ({ data }) => {
           state.data = data;
@@ -30,7 +37,17 @@ export default {
       );
     });
 
-    return { name, newName, ...toRefs(state) };
+    const changeName = () => {
+      newName.value = name.value;
+    };
+
+    return {
+      name,
+      newName,
+      computedValue,
+      changeName,
+      ...toRefs(state),
+    };
   },
 };
 </script>
